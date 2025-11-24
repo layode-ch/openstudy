@@ -58,16 +58,12 @@ Represents an account of a student
 
 - A user can login and sign up into the website with their username and password
 
-- A user can create a set
-
 - A user can logount
-
-- A user can change their username
-
-- A user can study any set
 
 - A user can create a set
 
 - A user can update their own sets
 
 - A user can delete their own sets
+
+- A user can study any set (flashcards / multi choice answers)
