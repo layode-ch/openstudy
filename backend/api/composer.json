@@ -1,0 +1,17 @@
+{
+    "name": "joao/openstudy",
+    "description": "Learing platform made for students to make learning interactive and fun. Focused on its community to create learning lists for everyone to use. Heavily inspired by the platform quizlet",
+    "type": "project",
+    "license": "CC-BY-NC-4.0",
+    "autoload": {
+        "psr-4": {
+            "Openstudy\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Joao Victor Pereira Vaz"
+        }
+    ],
+    "require": {}
+}
