@@ -6,6 +6,7 @@ use OpenStudy\Models\Company;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Psr7\Request;
 use OpenStudy\Models\Developer;
+use OpenStudy\Models\User;
 use OpenStudy\Schemas\SchemaException;
 
 abstract class BaseController {
@@ -26,12 +27,9 @@ abstract class BaseController {
 		$token = self::getToken();
 		if (!$token)
 			throw new SchemaException(["Invalid or missing Bearer token."], HTTPStatus::UNAUTHORIZED);
-		$account = Developer::selectByToken($token);
-		if (!$account) {
-			$account = Company::selectByToken($token);
-			if (!$account)
-				throw new SchemaException(["Invalid Bearer token."], HTTPStatus::UNAUTHORIZED);
-		}
+		$account = User::selectByToken($token);
+		if (!$account)
+			throw new SchemaException(["Invalid Bearer token."], HTTPStatus::UNAUTHORIZED);
 		return $token;
 	}
 
