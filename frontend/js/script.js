@@ -1,7 +1,9 @@
-import Modal from "./components/modal.js";
-import Alert from "./components/alert.js";
-const alert = new Alert("Hiiiiiiiii", false);
-const modal = new Modal("Title", "message")
-document.body.append(alert.wrapper, modal);
-modal.show()
-console.log(alert.btnClose);
+import Alert from "./components/Alert.js";
+import Dock from "./components/Dock.js";
+
+const alert = Alert.create("Hi");
+alert.fade = true;
+alert.type = "infos";
+//document.body.append(alert);
+
+
