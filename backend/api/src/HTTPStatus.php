@@ -1,5 +1,5 @@
 <?php
-namespace Openstudy;
+namespace OpenStudy;
 
 enum HTTPStatus: int {
     // 2xx Success
