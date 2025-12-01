@@ -8,9 +8,9 @@ use OpenApi\Attributes\Property;
 
 #[OA\Schema(required: ["email", "username", "password"])]
 class SignUp extends BaseSchema {
-	#[OA\Property, Property]
+	#[OA\Property, Property, VA\Filter(FILTER_VALIDATE_EMAIL)]
 	public string $email;
-	#[OA\Property, Property]
+	#[OA\Property, Property, VA\Filter(FILTER_SANITIZE_FULL_SPECIAL_CHARS)]
 	public string $username;
 	#[OA\Property, Property]
 	public string $password;
