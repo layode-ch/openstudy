@@ -1,7 +1,9 @@
 <?php
 namespace OpenStudy\Models;
 
-use OpenStudy\Attributes\DB as DB; 
+use OpenStudy\Attributes\DB as DB;
+use OpenStudy\Schemas\Login;
+use OpenStudy\Schemas\SignUp;
 
 class User extends BaseModel {
 	#[DB\Block([DB\Block::INSERT])]
@@ -12,6 +14,15 @@ class User extends BaseModel {
 	public string $password;
 	#[DB\Sensitive]
 	public string $token;
+
+	public function __construct(SignUp|null $data = null) {
+		if ($data instanceof SignUp) {
+			$this->email = $data->email;
+			$this->username = $data->username;
+			$this->password = password_hash($data->password, PASSWORD_BCRYPT);
+			$this->token = static::generateToken();
+		}
+	}
 
 	public static function generateToken() {
 		$token = uniqid();
