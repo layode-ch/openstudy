@@ -26,7 +26,7 @@ class OpenApiController extends BaseController {
 	]
 	public static function swagger(Request $request, Response $response) {
 		$generator = new Generator();
-		$openapi = $generator->generate([__DIR__."/../"]);
+		$openapi = $generator->generate([__DIR__."/.."]);
 		return static::updateResponse($response, json_decode($openapi->toJson()));
 	} 
 }
