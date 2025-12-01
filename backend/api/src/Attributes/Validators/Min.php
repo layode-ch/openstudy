@@ -1,5 +1,5 @@
 <?php
-namespace Openstudy\Attributes\Validators;
+namespace OpenStudy\Attributes\Validators;
 
 use Attribute;
 

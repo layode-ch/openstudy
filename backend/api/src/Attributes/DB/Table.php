@@ -1,5 +1,5 @@
 <?php
-namespace Openstudy\Attributes\DB;
+namespace OpenStudy\Attributes\DB;
 
 use Attribute;
 

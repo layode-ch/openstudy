@@ -1,5 +1,5 @@
 <?php
-namespace Openstudy\Attributes;
+namespace OpenStudy\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]

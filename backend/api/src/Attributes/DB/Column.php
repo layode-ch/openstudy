@@ -1,7 +1,7 @@
 <?php
-namespace Openstudy\Attributes\DB;
+namespace OpenStudy\Attributes\DB;
 
-use Openstudy\Attributes\Proprety;
+use OpenStudy\Attributes\Proprety;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
