@@ -21,7 +21,7 @@ CREATE TABLE `Set`(
 
 CREATE TABLE `Term`(
 	`id` INT UNSIGNED PRIMARY KEY,
-	`name` VARCHAR(50) NOT NULL,
+	`original` VARCHAR(50) NOT NULL,
 	`description` VARCHAR(100) NOT NULL,
 	`set_id` INT UNSIGNED,
 	CONSTRAINT fk_term_set
