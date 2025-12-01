@@ -3,6 +3,7 @@ namespace OpenStudy\Schemas;
 
 use Exception;
 use OpenStudy\Attributes\Proprety;
+use OpenStudy\Attributes\Validators\Filter;
 use OpenStudy\Attributes\Validators\Min;
 use OpenStudy\Attributes\Validators\Validator;
 use OpenStudy\Attributes\Validators\ValidatorException;
@@ -16,13 +17,12 @@ class BaseSchema {
 
 	public function __construct(array $data) {
 		foreach ($data as $key => $value) {
-			$this->$key = $value;
+			$this->set($key, $value);
 		}
 		$this->validateAllRequiredPropreties();
 	}
 
-	public function __set(string $name, mixed $value) {
-
+	private function set(string $name, mixed $value) {
 		$properties = $this->getPropertyNames();
 		if (array_key_exists($name, $properties)) {
 			$propertyName = $properties[$name];
@@ -101,7 +101,6 @@ class BaseSchema {
 			}
 
 			$this->validateProprety($name, $prop, $value);
-			$this->$name = $value;
 			return;
 		}
 
@@ -125,7 +124,10 @@ class BaseSchema {
 			$validator = $attr->newInstance();
 			try {
 				if ($validator instanceof Validator) {
-					$validator->validate($name, $value);
+					$result = $validator->validate($name, $value);
+					if ($validator instanceof Filter && $result == null) {
+						$this->$name = filter_var($value, $validator->filter);
+					}
 				}
 			}
 			catch(Exception $e) {
@@ -134,6 +136,7 @@ class BaseSchema {
 		}
 		if (count($errors) > 0)
 			throw new SchemaException($errors);
+    	$property->setValue($this, $value);
 	}
 
 	private function validateAllRequiredPropreties() {
@@ -141,7 +144,6 @@ class BaseSchema {
 		$errors = [];
 
 		foreach ($properties as $property) {
-			$property->setAccessible(true);
 			$name = array_search($property->getName(), $this->getPropertyNames());
 			if (!$property->isInitialized($this)) {
 				$errors[] = "The field '{$name}' is required but missing.";
