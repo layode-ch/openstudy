@@ -8,6 +8,7 @@ use OpenStudy\HTTPStatus;
 use OpenStudy\Models\User;
 use OpenStudy\Schemas\Login;
 use OpenStudy\Schemas\SchemaException;
+use OpenStudy\Schemas\SignUp;
 
 class UserController extends BaseController {
 
@@ -15,16 +16,16 @@ class UserController extends BaseController {
 	 * Allows to login into a user account
 	 *
 	 * @param Login $schema
-	 * @return void
+	 * @return Response
 	 */
 	#[
-		OA\Get("/user/login"),
+		OA\Post("/user/login"),
 		OA\RequestBody(
 			required: true,
-			content: [new OA\MediaType(
+			content: new OA\MediaType(
 				mediaType: 'application/json',
 				schema: new OA\Schema(Login::class)
-		)]),
+		)),
 		OA\Response(response: 200, content: new OA\MediaType(
 			mediaType: "application/json",
 			schema: new OA\Schema(
@@ -34,7 +35,7 @@ class UserController extends BaseController {
 			)
 		))
 	]
-	public static function login (Request $request, Response $response, array $args) {
+	public static function login(Request $request, Response $response, array $args): Response {
 		$schema = new Login(static::getBody($request));
 		$user = User::selectByEmail($schema->email);
 		if ($user === false)
@@ -43,4 +44,40 @@ class UserController extends BaseController {
 			throw new SchemaException(["Wrong password", HTTPStatus::FORBIDDEN]);
 		return static::updateResponse($response, ["token" => $user->token]);
 	}  
+
+	/**
+	 * Allows to create a user account
+	 *
+	 * @param Request $request
+	 * @param Response $response
+	 * @param array $args
+	 * @return Response
+	 */
+	#[
+		OA\Post("/user/sign-up"),
+		OA\RequestBody(
+			required: true,
+			content: new OA\MediaType(
+				mediaType: "application/json",
+				schema: new OA\Schema(SignUp::class)
+			)
+		),
+		OA\Response(response: 200, content: new OA\MediaType(
+			mediaType: "application/json",
+			schema: new OA\Schema(
+				properties: [
+					new OA\Property("token", type:"string")
+				]
+			)
+		))
+	]
+	public static function signUp(Request $request, Response $response, array $args): Response {
+		$schema = new SignUp(static::getBody($request));
+		$user = User::selectByEmail($schema->email);
+		if ($user !== false)
+			throw new SchemaException(["Email already taken"], HTTPStatus::CONFLICT);
+		$user = new User($schema);
+		$user->insert();
+		return static::updateResponse($response, ["token" => $user->token], HTTPStatus::CREATED);
+	}
 }
