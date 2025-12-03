@@ -7,10 +7,10 @@ use OpenApi\Attributes as OA;
 
 #[OA\Schema(required: ["email", "username", "password"])]
 class SignUp extends BaseSchema {
-	#[OA\Property, Property, VA\Filter(FILTER_VALIDATE_EMAIL)]
+	#[OA\Property, Property,VA\Max(50), VA\Min(5), VA\Filter(FILTER_VALIDATE_EMAIL)]
 	public string $email;
-	#[OA\Property, Property, VA\Filter(FILTER_SANITIZE_FULL_SPECIAL_CHARS)]
+	#[OA\Property, Property,VA\Max(50), VA\Min(5), VA\Filter(FILTER_SANITIZE_FULL_SPECIAL_CHARS)]
 	public string $username;
-	#[OA\Property, Property]
+	#[OA\Property, Property, VA\Max(100), VA\Min(5)]
 	public string $password;
 }
