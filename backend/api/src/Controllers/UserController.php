@@ -10,6 +10,7 @@ use OpenStudy\Schemas\Login;
 use OpenStudy\Schemas\SchemaException;
 use OpenStudy\Schemas\SignUp;
 
+#[OA\Tag("User")]
 class UserController extends BaseController {
 
 	/**
@@ -19,7 +20,7 @@ class UserController extends BaseController {
 	 * @return Response
 	 */
 	#[
-		OA\Post("/user/login"),
+		OA\Post("/user/login", tags: ["User"]),
 		OA\RequestBody(
 			required: true,
 			content: new OA\MediaType(
@@ -54,7 +55,7 @@ class UserController extends BaseController {
 	 * @return Response
 	 */
 	#[
-		OA\Post("/user/sign-up"),
+		OA\Post("/user/sign-up", tags: ["User"]),
 		OA\RequestBody(
 			required: true,
 			content: new OA\MediaType(
