@@ -2,7 +2,7 @@
 namespace OpenStudy\Schemas;
 
 use Exception;
-use OpenStudy\Attributes\Proprety;
+use OpenStudy\Attributes\Property;
 use OpenStudy\Attributes\Validators\Filter;
 use OpenStudy\Attributes\Validators\Min;
 use OpenStudy\Attributes\Validators\Validator;
@@ -140,7 +140,7 @@ class BaseSchema {
 	}
 
 	private function validateAllRequiredPropreties() {
-		$properties = $this->getPropertiesWithAttribute(Proprety::class);
+		$properties = $this->getPropertiesWithAttribute(Property::class);
 		$errors = [];
 
 		foreach ($properties as $property) {
@@ -278,10 +278,10 @@ class BaseSchema {
 	}
 
 	private function getPropertyNames(): array {
-		$properties = $this->getPropertiesWithAttribute(Proprety::class);
+		$properties = $this->getPropertiesWithAttribute(Property::class);
 		$names = [];
 		foreach ($properties as $property) {
-			$attr = $property->getAttributes(Proprety::class)[0]->newInstance();
+			$attr = $property->getAttributes(Property::class)[0]->newInstance();
 			if ($attr->name == null)
 				$attr->name = $property->name;
 			$names[$attr->name] = $property->name;
