@@ -2,7 +2,6 @@
 namespace OpenStudy\Models;
 
 use OpenStudy\Attributes\DB as DB;
-use OpenStudy\Schemas\Login;
 use OpenStudy\Schemas\SignUp;
 
 class User extends BaseModel {
