@@ -14,7 +14,8 @@ class Filter extends Validator {
 	public function validate(string $name, mixed $value): ?bool {
 		$result = filter_var($value, $this->filter);
 		$message = "The field '$name' is supposed to be ";
-		if ($result === false || !is_bool($result)) {
+		
+		if ($result === false) {
 			switch ($this->filter) {
 				case FILTER_VALIDATE_EMAIL:
 					throw new ValidatorException($message."an email");
