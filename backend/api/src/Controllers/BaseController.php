@@ -22,26 +22,4 @@ abstract class BaseController {
 			$body = [];
 		return $body;
 	}
-
-	protected static function verfifyToken(): string {
-		$token = self::getToken();
-		if (!$token)
-			throw new SchemaException(["Invalid or missing Bearer token."], HTTPStatus::UNAUTHORIZED);
-		$account = User::selectByToken($token);
-		if (!$account)
-			throw new SchemaException(["Invalid Bearer token."], HTTPStatus::UNAUTHORIZED);
-		return $token;
-	}
-
-	protected static function getToken(): string|false {
-		$headers = getallheaders();
-		if (!array_key_exists('Authorization', $headers)) { 
-			return false;
-		}
-		$bearer = explode(' ', $headers['Authorization']); 
-		if ($bearer[0] === 'Bearer') {
-			return $bearer[1];
-		}
-		return false;
-	}
 } 
