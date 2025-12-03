@@ -62,9 +62,15 @@ abstract class BaseModel implements JsonSerializable {
 		return $sttmt;
 	}
 	
-	public static function selectAll(): array {
+	protected static function selectAll(): array {
 		$sql = static::selectQuery();
 		$sttmt = self::run($sql);
+		return $sttmt->fetchAll(PDO::FETCH_CLASS, static::class);
+	}
+
+	protected static function search(array $likeColumns = [], array $exactMatchColumns = []): array {
+		$conditions = static::searchCondition($likeColumns, $exactMatchColumns);
+		$sttmt = self::run($conditions["sql"], $conditions["params"]);
 		return $sttmt->fetchAll(PDO::FETCH_CLASS, static::class);
 	}
 
@@ -80,7 +86,16 @@ abstract class BaseModel implements JsonSerializable {
 	}
 
 	
-
+	/**
+	 * Creates an array with the sql query and parameters to search in the database
+	 *
+	 * @param array $likeColumns
+	 * @param array $exactMatchColumns
+	 * @return array{
+	 *     sql: string,
+	 *     params: array<int, mixed>
+	 * }
+	 */
 	protected static function searchCondition(array $likeColumns = [], array $exactMatchColumns = []): array {
 		$conditions = [];
 		$params = [];
