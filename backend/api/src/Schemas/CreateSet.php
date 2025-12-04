@@ -10,6 +10,4 @@ class CreateSet extends BaseSchema {
 	public string $name;
 	#[OA\Property, Property, VA\Filter(FILTER_SANITIZE_FULL_SPECIAL_CHARS)]
 	public string $description;
-	#[OA\Property("user_id"), Property("user_id")]
-	public int $userId;
 }
