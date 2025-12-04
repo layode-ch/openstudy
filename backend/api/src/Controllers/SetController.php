@@ -5,15 +5,17 @@ use OpenApi\Attributes as OA;
 
 use OpenStudy\HTTPStatus;
 use OpenStudy\Models\Set;
+use OpenStudy\Models\Term;
 use OpenStudy\Models\User;
+use OpenStudy\Schemas\AddTerms;
 use OpenStudy\Schemas\CreateSet;
-
+use OpenStudy\Schemas\SchemaException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Psr7\Request;
 
 #[OA\Tag("Set")]
 class SetController extends BaseController {
-	
+
 	#[
 		OA\Put("/set/create", tags: ["Set"]),
 		OA\RequestBody( 
@@ -31,12 +33,44 @@ class SetController extends BaseController {
 	]
 	public static function create(Request $request, Response $response, array $args): Response {
 		$schema = new CreateSet(static::getBody($request));
-		$token = $request->getAttribute("token");
-		$userId = User::selectByToken($token)->id;
+		$userId = $request->getAttribute("user_id");
 		$set = new Set($schema);
 		$set->userId = $userId;
 		$id = $set->insert();
 		$set = Set::selectById($id);
 		return static::updateResponse($response, $set, HTTPStatus::CREATED);
+	}
+
+	#[
+		OA\Put("/set/{id}/add", tags: ["Set"]),
+		OA\RequestBody(required: true, content: new OA\MediaType(
+			"application/json",
+			schema: new OA\Schema(AddTerms::class)
+		))
+	]
+	public static function add(Request $request, Response $response, array $args): Response {
+		$userId = (int)$request->getAttribute("user_id");
+		$setId = (int)$args["id"];
+		$set = Set::selectById($setId);
+
+		if ($set === false)
+			static::notFound();
+		if ($set->userId !== $userId)
+			static::forbidden();
+
+		$schema = new AddTerms(static::getBody($request));
+		foreach ($schema->terms as $key => $term) {
+			$term->setId = $setId;
+			$term->insert();
+		}
+		return static::updateResponse($response, ["message" => "Terms added successfully"], HTTPStatus::CREATED);
+	}
+
+	private static function notFound() {
+		throw new SchemaException(["Set not found"], HTTPStatus::NOT_FOUND);
+	}
+
+	private static function forbidden() {
+		throw new SchemaException(["You don't have the rights to do that"], HTTPStatus::FORBIDDEN);
 	}
 }
