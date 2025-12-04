@@ -11,19 +11,25 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 class AuthMiddleware implements MiddlewareInterface {
 	public function process(Request $request, RequestHandler $handler): Response {
-		$this->verfifyToken();
-		$request = $request->withAttribute("token", $this->getToken());		$response = $handler->handle($request);
+		$infos = $this->verfifyToken();
+		$request = $request->withAttribute("token", $infos["token"]);
+		$request = $request->withAttribute("user_id", $infos["user_id"]);
+		$response = $handler->handle($request);
         return $response;
 	}
-
-	protected static function verfifyToken(): string {
+	/**
+	 * Undocumented function
+	 *
+	 * @return array{token:string, user_id:int}
+	 */
+	protected static function verfifyToken(): array {
 		$token = self::getToken();
 		if (!$token)
 			throw new SchemaException(["Invalid or missing Bearer token."], HTTPStatus::UNAUTHORIZED);
 		$account = User::selectByToken($token);
 		if (!$account)
 			throw new SchemaException(["Invalid Bearer token."], HTTPStatus::UNAUTHORIZED);
-		return $token;
+		return ["token" => $token, "user_id" => $account->id];
 	}
 
 	protected static function getToken(): string|false {
