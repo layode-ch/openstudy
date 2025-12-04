@@ -11,7 +11,7 @@ class AddTerms extends BaseSchema {
 	public array $terms;
 
 	#[
-		OA\Property("term", type: "array", 
+		OA\Property("terms", type: "array", 
 			items: new OA\Items(CreateTerm::class
 		)), Property
 	]
