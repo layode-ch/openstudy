@@ -9,6 +9,7 @@ use OpenStudy\Models\Term;
 use OpenStudy\Models\User;
 use OpenStudy\Schemas\AddTerms;
 use OpenStudy\Schemas\CreateSet;
+use OpenStudy\Schemas\Message;
 use OpenStudy\Schemas\SchemaException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Psr7\Request;
@@ -42,11 +43,20 @@ class SetController extends BaseController {
 	}
 
 	#[
-		OA\Put("/set/{id}/add", tags: ["Set"]),
+		OA\Put("/set/{id}/add", tags: ["Set"], 
+			parameters: [
+				new OA\Parameter(name:"id", in: "path", required: true)
+			]
+		),
 		OA\RequestBody(required: true, content: new OA\MediaType(
 			"application/json",
 			schema: new OA\Schema(AddTerms::class)
-		))
+		)),
+		OA\Response(response: HTTPStatus::CREATED->value, 
+			content: new OA\MediaType("application/json",
+				schema: new OA\Schema(Message::class)
+			) 
+		)
 	]
 	public static function add(Request $request, Response $response, array $args): Response {
 		$userId = (int)$request->getAttribute("user_id");
@@ -63,7 +73,7 @@ class SetController extends BaseController {
 			$term->setId = $setId;
 			$term->insert();
 		}
-		return static::updateResponse($response, ["message" => "Terms added successfully"], HTTPStatus::CREATED);
+		return static::updateResponse($response, new Message("Terms added successfully"), HTTPStatus::CREATED);
 	}
 
 	private static function notFound() {
