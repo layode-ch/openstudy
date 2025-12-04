@@ -1,22 +1,25 @@
 <?php
 namespace OpenStudy\Models;
 
+use OpenApi\Attributes as OA;
 use OpenStudy\Attributes\DB as DB;
 use OpenStudy\Schemas\CreateSet;
 
+#[OA\Schema]
 class Set extends BaseModel {
-	#[DB\Block([DB\Block::INSERT, DB\Block::UPDATE])]
+	#[OA\Property, DB\Block([DB\Block::INSERT, DB\Block::UPDATE])]
 	public int $id;
+	#[OA\Property]
 	public string $name;
+	#[OA\Property]
 	public string $description;
-	#[DB\Column("user_id"), DB\Block([DB\Block::UPDATE])]
+	#[OA\Property("user_id"), DB\Column("user_id"), DB\Block([DB\Block::UPDATE])]
 	public int $userId;
 
 	public function __construct(?CreateSet $data = null) {
 		if ($data instanceof CreateSet) {
 			$this->name = $data->name;
 			$this->description = $data->description;
-			$this->userId = $data->userId;
 		}
 	}
 
@@ -30,7 +33,7 @@ class Set extends BaseModel {
 		return self::getDB()->lastInsertId();
 	}
 
-	public function selectById(int $id): Set {
+	public static function selectById(int $id): Set {
 		return static::selectBy("id", $id);
 	}
 
