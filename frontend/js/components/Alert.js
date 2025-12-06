@@ -9,7 +9,7 @@ import { animate, waapi, eases, spring, JSAnimation } from 'animejs';
  * @class Alert
  * @extends {HTMLDivElement}
  */
-export default class Alert extends HTMLDivElement {
+export class Alert extends HTMLDivElement {
     static get name() { return "alert-component"; }
 
     
@@ -25,7 +25,7 @@ export default class Alert extends HTMLDivElement {
     /**
      * Description placeholder
      *
-     * @type {"infos" | "warning" | "success" | null}
+     * @type {"infos"|"warning"|"success"|"error"|"primary"|"secondary"|null}
      */
     get type() {
         // @ts-ignore
@@ -38,14 +38,12 @@ export default class Alert extends HTMLDivElement {
     
     constructor() {
         super();
-        this.type = this.type;
-        this.type = "infos";
         this.classList.add("alert");
         const text = this.textContent;
         this.innerHTML = `
 			<i class="bi bi-info-circle"></i>
                 <span>${text}</span>
-            <button class="alert-close" style="cursor: pointer;">
+            <button type="button" class="alert-close" style="cursor: pointer;">
                 <i class="bi bi-x-lg"></i>
             </button>
 		`;
@@ -73,14 +71,18 @@ export default class Alert extends HTMLDivElement {
      * Creates an instance of `Alert`
      *
      * @param {string} message 
+     * @param {"infos"|"warning"|"success"|"error"|"primary"|"secondary"} [type="infos"] 
+     * @param {boolean} fade 
      * @static
      * @returns {Alert}
      */
-    static create(message) {
+    static create(message, type = "infos", fade = true) {
         /** @type {Alert} */
         // @ts-ignore
         const alert = document.createElement("div", { is: Alert.name });
         alert.message = message;
+        alert.type = type;
+        alert.fade = fade;
         return alert;
     }
 }

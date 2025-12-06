@@ -1,4 +1,4 @@
-export default class Dock extends HTMLDivElement {
+export class Dock extends HTMLDivElement {
 	
 	/**
 	 * Name of the custom `Dock` component

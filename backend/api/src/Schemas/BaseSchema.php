@@ -11,15 +11,21 @@ use ReflectionClass;
 use ReflectionEnum;
 use ReflectionProperty;
 use ReflectionUnionType;
-use ReflectionType;
+use Throwable;
+use TypeError;
+use ValueError;
 
 class BaseSchema {
 
+	private array $errors = [];
+	private array $propErrors = [];
 	public function __construct(array $data) {
 		foreach ($data as $key => $value) {
 			$this->set($key, $value);
 		}
 		$this->validateAllRequiredPropreties();
+		if (!empty($this->errors))
+			throw new SchemaException($this->errors);
 	}
 
 	private function set(string $name, mixed $value) {
@@ -48,20 +54,21 @@ class BaseSchema {
 							$enumInstance = $enumClass::tryFrom($value);
 							// tryFrom may return null for invalid values
 							if ($enumInstance === null) {
-								throw new \ValueError("Invalid enum value");
+								$this->propErrors[] = $prop;
+								$this->errors[] = "Invalid enum value";
 							}
 						} else {
 							$enumInstance = $enumClass::from($value);
 						}
 						$value = $enumInstance;
 					} catch (\ValueError $e) {
-						throw new SchemaException([$this->fieldValueMessage($name, $this->getEnumValues($enumClass))]);
+						$this->propErrors[] = $prop;
+						$this->errors[] = $this->fieldValueMessage($name, $this->getEnumValues($enumClass));
 					}
 				}
 			}
 
 			$this->validateProprety($name, $prop, $value);
-			$this->$propertyName = $value;
 			return;
 		}
 
@@ -88,14 +95,18 @@ class BaseSchema {
 						if (method_exists($enumClass, 'tryFrom')) {
 							$enumInstance = $enumClass::tryFrom($value);
 							if ($enumInstance === null) {
-								throw new \ValueError("Invalid enum value");
+								$this->propErrors[] = $prop;
+								$this->errors[] = "Invalid enum value";
+								return;
 							}
 						} else {
 							$enumInstance = $enumClass::from($value);
 						}
 						$value = $enumInstance;
 					} catch (\ValueError $e) {
-						throw new SchemaException([$this->fieldValueMessage($name, $this->getEnumValues($enumClass))]);
+						$this->propErrors[] = $prop;
+						$this->errors[] = $this->fieldValueMessage($name, $this->getEnumValues($enumClass));
+						return;
 					}
 				}
 			}
@@ -113,12 +124,13 @@ class BaseSchema {
 
 	private function validateProprety(string $name, ReflectionProperty $property, mixed $value) {
 		$attrs = $this->getAttributesFromProprety($property, Validator::class);
-		$errors = [];
 		try {
 			$this->verifyTypes($name, $property, $value);
 		}
-		catch (Exception $e) {
-			throw new SchemaException([$e->getMessage()]);
+		catch (Throwable $e) {
+			$this->propErrors[] = $property;
+			$this->errors[] = $e->getMessage();
+			return;
 		}
 		foreach ($attrs as $attr) {
 			$validator = $attr->newInstance();
@@ -131,34 +143,30 @@ class BaseSchema {
 				}
 			}
 			catch(Exception $e) {
-				$errors[] = $e->getMessage();
+				$this->errors[] = $e->getMessage();
 			}
 		}
-		if (count($errors) > 0)
-			throw new SchemaException($errors);
     	$property->setValue($this, $value);
 	}
 
 	private function validateAllRequiredPropreties() {
 		$properties = $this->getPropertiesWithAttribute(Property::class);
-		$errors = [];
 
 		foreach ($properties as $property) {
+			if (in_array($property, $this->propErrors)) {
+				continue;
+			}
 			$name = array_search($property->getName(), $this->getPropertyNames());
 			if (!$property->isInitialized($this)) {
-				$errors[] = "The field '{$name}' is required but missing.";
+				$this->errors[] = "The field '{$name}' is required but missing.";
 				continue;
 			}
 
 			// Also reject null values if property does not allow null
 			$type = $property->getType();
 			if ($type && !$type->allowsNull() && $property->getValue($this) === null) {
-				$errors[] = "The field '{$property->getName()}' cannot be null.";
+				$this->errors[] = "The field '{$property->getName()}' cannot be null.";
 			}
-		}
-
-		if (!empty($errors)) {
-			throw new SchemaException($errors);
 		}
 	}
 
@@ -180,7 +188,7 @@ class BaseSchema {
 		$isEnum = $this->verifyEnum($types, $name, $property, $value);
 
 		if (!in_array("mixed", $types, true) && !in_array($type, $types, true) && !$isEnum) {
-			throw new ValidatorException($this->fieldTypeMessage($name, $types));
+			throw new TypeError($this->fieldTypeMessage($name, $types));
 		}
 	}
 
@@ -207,8 +215,8 @@ class BaseSchema {
 				} catch (\ValueError $e) {
 					// conversion failed, continue to type error
 				}
-
-				throw new ValidatorException($this->fieldValueMessage($name, $this->getEnumValues($t)));
+				$this->propErrors[] = $property;
+				$this->errors[] = $this->fieldValueMessage($name, $this->getEnumValues($t));
 				return true;
 			} 	
 		}
