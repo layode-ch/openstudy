@@ -39,14 +39,14 @@
       restart: unless-stopped
 
     frontend:
-      image: httpd
+      build: ./frontend
       command: bash -c "apachectl -D FOREGROUND"
       networks:
         - openstudy-network
       env_file:
         - ./.env
       volumes:
-        - ./public:/usr/local/apache2/htdocs/
+        - ./frontend:/usr/local/apache2/htdocs/
       depends_on:
         - api
       restart: unless-stopped
