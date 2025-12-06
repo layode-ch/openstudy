@@ -7,6 +7,7 @@ use OpenApi\Attributes as OA;
 use OpenStudy\HTTPStatus;
 use OpenStudy\Models\User;
 use OpenStudy\Schemas\Login;
+use OpenStudy\Schemas\Message;
 use OpenStudy\Schemas\SchemaException;
 use OpenStudy\Schemas\SignUp;
 
@@ -80,5 +81,10 @@ class UserController extends BaseController {
 		$user = new User($schema);
 		$user->insert();
 		return static::updateResponse($response, ["token" => $user->token], HTTPStatus::CREATED);
+	}
+
+	public static function auth(Request $request, Response $response, array $args): Response {
+		$message = new Message("The token is valid");
+		return static::updateResponse($response, $message);
 	}
 }

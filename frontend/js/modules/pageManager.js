@@ -37,15 +37,14 @@ export default class PageManager {
 			console.error("Page not found");
 			path = "/not-found";
 		}
+		if (!this.publicPages.includes(path) && !await APIClient.checkToken()) {
+			this.changePage("/login");
+			return;
+		}
 		const page = this.route.get(path);
 		this.main.innerHTML = "";
 		this.main.append(page.template.content.cloneNode(true));
-
-		if (!this.publicPages.includes(path) && !await APIClient.checkToken())
-			this.changePage("/login");
-		else
-			page.init();
-
+		page.init();
 	}
 
 	/**

@@ -13,7 +13,10 @@ export default class APIClient {
 		return headers;
 	}
 
-	static async checkToken() { return true; }
+	static async checkToken() { 
+		const result = await this.request("GET", "/user/auth"); 
+		return !(result instanceof APIError);
+	}
 
 	/**
 	 * Effectue une requête générique à l'API.

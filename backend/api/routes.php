@@ -10,6 +10,7 @@ $app->get("/swagger", [OpenApiController::class, "swagger"]);
 $app->group("/user" , function (RouteCollectorProxy $group) {
 	$group->post("/login", [UserController::class, "login"]);
 	$group->post("/sign-up", [UserController::class, "signUp"]);
+	$group->get("/auth", [UserController::class, "auth"])->add(new AuthMiddleware());
 });
 
 $app->group("/set" , function (RouteCollectorProxy $group) {
