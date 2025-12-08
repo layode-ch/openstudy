@@ -5,6 +5,9 @@ export default class APIClient {
 	static get token() { return localStorage.getItem("token"); }
 	static set token(value) { localStorage.setItem("token", value); }
 
+	static get userId() { return Number(localStorage.getItem("user_id")); }
+	static set userId(value) { localStorage.setItem("user_id", value); }
+
 	static getHeaders() {
 		const headers = { "Content-Type": "application/json" };
 		if (this.token) {
@@ -15,6 +18,8 @@ export default class APIClient {
 
 	static async checkToken() { 
 		const result = await this.request("GET", "/user/auth"); 
+		if (!(result instanceof APIError))
+			this.userId = result.id;
 		return !(result instanceof APIError);
 	}
 
@@ -58,12 +63,16 @@ export default class APIClient {
 		}
 	}
 
-	static login(data) {
-		return this.request("POST", "/user/login", data);
+	static async login(data) {
+		return await this.request("POST", "/user/login", data);
 	}
 
-	static signUp(data) {
-		return this.request("POST", "/user/sign-up", data);
+	static async signUp(data) {
+		return await this.request("POST", "/user/sign-up", data);
+	}
+
+	static async searchSets() {
+		return await this.request("GET", "/set/search");
 	}
 
 }
