@@ -15,8 +15,8 @@
 	}
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-	<script src="./js/components/index.js" type="module"></script>
-	<script src="./js/script.js" type="module"></script>
+	<script src="/js/components/index.js" type="module"></script>
+	<script src="/js/script.js" type="module"></script>
 </head>
 <body class="min-h-screen flex flex-col">
 	<header class="sticky top-0 z-1">
@@ -131,42 +131,37 @@
 			</div>
 		</template>
 		<template id="sets">
-			<div class="min-h-100 flex flex-col items-center text-center w-dvw justify-around bg-primary/30">
+			<div class="min-h-100 flex flex-col items-center text-center w-dvw justify-evenly bg-primary/30 p-5">
 				<h1 class="text-3xl font-bold">Your sets</h1>
-				<hr class="h-1 w-9/10 bg-primary rounded-full my-8 border-0"> 
-				<div class="user-sets flex flex-wrap justify-center">
-					
-				</div>
-				<div class="sets flex flex-wrap justify-center">
-
-				</div>
-				<hr class="h-1 w-9/10 bg-primary rounded-full my-8 border-0"> 
+				<hr class="h-1 w-full bg-primary rounded-full border-0"> 
+				<div class="user-sets flex flex-wrap w-full"></div>
+				<hr class="h-1 w-full bg-primary rounded-full border-0"> 
+				<div class="sets flex flex-wrap w-full"></div>
 			</div>
+		</template>
+		<template id="sets-edit">
+
 		</template>
 	</main>
 	
 	<footer class="footer sm:footer-horizontal bg-neutral text-neutral-content p-10">
 		<nav>
 			<h6 class="footer-title">Author</h6>
-			<a class="link link-hover">Joao Victor Pereira Vaz</a>
-		</nav>
-		<nav>
-			<h6 class="footer-title">Company</h6>
-			<a class="link link-hover">CFPT Informatique</a>
+			<a class="link link-hover" href="https://github.com/layode-ch">Joao Victor Pereira Vaz</a>
 		</nav>
 		<nav>
 			<h6 class="footer-title">Frontend</h6>
-			<a class="link link-hover">DaisyUI</a>
-			<a class="link link-hover">Tailwind</a>
+			<a class="link link-hover" href="https://daisyui.com/">DaisyUI</a>
+			<a class="link link-hover" href="https://tailwindcss.com/">Tailwind</a>
 		</nav>
 		<nav>
 			<h6 class="footer-title">Backend</h6>
-			<a class="link link-hover">Slim Framework V4</a>
-			<a class="link link-hover">Zircote swagger-php</a>
+			<a class="link link-hover" href="https://www.slimframework.com/">Slim Framework V4</a>
+			<a class="link link-hover" href="https://zircote.github.io/swagger-php/">Zircote swagger-php</a>
 		</nav>
 		<nav>
 			<h6 class="footer-title">Legal</h6>
-			<a class="link link-hover">Licence CC V4.0</a>
+			<a class="link link-hover" href="https://creativecommons.org/licenses/by-nc/4.0/">Licence CC BY-NC V4.0</a>
 		</nav>
 	</footer>
 </body>
