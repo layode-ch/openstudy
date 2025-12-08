@@ -1,19 +1,19 @@
 meta {
-  name: Login
+  name: Create
   type: http
-  seq: 1
+  seq: 2
 }
 
-post {
-  url: {{base_url}}/user/login
+put {
+  url: {{base_url}}/set/create
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "email": "test@test.com",
-    "password": "Super"
+    "name": "Truc allemand",
+    "description": "hello"
   }
 }
 

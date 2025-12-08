@@ -1,0 +1,15 @@
+meta {
+  name: Search
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/set/search
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

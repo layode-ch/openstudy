@@ -17,7 +17,7 @@ abstract class BaseController {
 	}
 
 	protected static function getBody(Request $request): array {
-		$body = $request->getParsedBody();
+		$body = json_decode($request->getBody()->getContents(), true);
 		if ($body === null)
 			$body = [];
 		return $body;
