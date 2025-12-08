@@ -3,11 +3,14 @@ namespace OpenStudy\Models;
 
 use OpenStudy\Attributes\DB as DB;
 use OpenStudy\Schemas\SignUp;
-
+use OpenApi\Attributes as OA;
+#[OA\Schema]
 class User extends BaseModel {
-	#[DB\Block([DB\Block::INSERT])]
+	#[OA\Property,DB\Block([DB\Block::INSERT])]
 	public int $id;
+	#[OA\Property]
 	public string $email;
+	#[OA\Property]
 	public string $username;
 	#[DB\Sensitive]
 	public string $password;
