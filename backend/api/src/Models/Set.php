@@ -41,9 +41,13 @@ class Set extends BaseModel {
 	 * Undocumented function
 	 *
 	 * @param integer $id
-	 * @return array<User>
+	 * @return array<Set>
 	 */
-	public function selectAllByUserId(int $id): array {
+	public static function selectAllByUserId(int $id): array {
 		return static::search(exactMatchColumns:["user_id" => $id]);
+	}
+
+	public static function searchAll(): array {
+		return parent::selectAll();
 	}
 }
