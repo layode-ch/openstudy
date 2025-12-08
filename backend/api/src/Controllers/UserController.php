@@ -112,4 +112,24 @@ class UserController extends BaseController {
 		$sets = Set::selectAllByUserId($userId);
 		return static::updateResponse($response, ["sets" => $sets]);
 	}
+
+	#[
+		OA\Get("/user/{id}", tags: ["User"], 
+			parameters: [
+				new OA\Parameter(name:"id", in: "path", required: true)
+			]
+		),
+		OA\Response(response: HTTPStatus::CREATED->value, 
+			content: new OA\MediaType("application/json",
+				schema: new OA\Schema(User::class)
+			) 
+		)
+	]
+	public static function getById(Request $request, Response $response, array $args): Response {
+		$id = (int)$args["id"];
+		$user = User::selectById($id);
+		if ($user === false)
+			throw new SchemaException(["User not found"], HTTPStatus::NOT_FOUND);
+		return static::updateResponse($response, $user);
+	}
 }

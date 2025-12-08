@@ -11,6 +11,7 @@ $app->group("/user" , function (RouteCollectorProxy $group) {
 	$group->post("/login", [UserController::class, "login"]);
 	$group->post("/sign-up", [UserController::class, "signUp"]);
 	$group->get("/auth", [UserController::class, "auth"])->add(new AuthMiddleware());
+	$group->get("/{id}", [UserController::class, "getById"]);
 });
 
 $app->group("/set" , function (RouteCollectorProxy $group) {
