@@ -69,11 +69,23 @@ class SetController extends BaseController {
 			static::forbidden();
 
 		$schema = new AddTerms(static::getBody($request));
-		foreach ($schema->terms as $key => $term) {
+		foreach ($schema->terms as $term) {
 			$term->setId = $setId;
 			$term->insert();
 		}
 		return static::updateResponse($response, new Message("Terms added successfully"), HTTPStatus::CREATED);
+	}
+	
+	#[
+		OA\Get("/set/search", tags: ["Set"]),
+		OA\Response(response:200, content: new OA\JsonContent(
+			type: "array",
+			items: new OA\Items(Set::class)
+		))
+	]
+	public static function search(Request $request, Response $response, array $args): Response {
+		$sets = Set::searchAll();
+		return static::updateResponse($response, $sets);
 	}
 
 	private static function notFound() {
