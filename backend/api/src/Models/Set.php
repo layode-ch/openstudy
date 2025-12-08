@@ -33,7 +33,7 @@ class Set extends BaseModel {
 		return self::getDB()->lastInsertId();
 	}
 
-	public static function selectById(int $id): Set {
+	public static function selectById(int $id): Set|false {
 		return static::selectBy("id", $id);
 	}
 

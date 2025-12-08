@@ -88,6 +88,23 @@ class SetController extends BaseController {
 		return static::updateResponse($response, $sets);
 	}
 
+	#[
+		OA\Get("/set/{id}", tags: ["Set"],
+			parameters: [
+				new OA\Parameter(name:"id", in: "path", required: true)
+			]),
+		OA\Response(response: 200, content: new OA\MediaType("application/json",
+			schema: new OA\Schema(Set::class)
+		))
+	]
+	public static function getById(Request $request, Response $response, array $args): Response {
+		$id = (int)$args["id"];
+		$set = Set::selectById($id);
+		if ($set === false)
+			static::notFound();
+		return static::updateResponse($response, $set);
+	}
+
 	private static function notFound() {
 		throw new SchemaException(["Set not found"], HTTPStatus::NOT_FOUND);
 	}
