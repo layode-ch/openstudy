@@ -19,7 +19,7 @@ export class SetCard extends Card {
 	}
 	set author(value) {
 		this.setAttribute("author", value);
-		this.querySelector(".set-author").textContent = value;
+		this.querySelector(".set-author").textContent = `Made by: ${value}`;
 	}
 
 	constructor() {
