@@ -32,6 +32,7 @@ export default class Sets extends Page {
 	 */
 	async #displaySet(set, index) {
 		let user = {username: ""};
+		const a = document.createElement("a");
 		if (this.#userCache.has(set.user_id))
 			user.username = this.#userCache.get(set.user_id);
 		else {
@@ -40,11 +41,13 @@ export default class Sets extends Page {
 		}
 		const setCard = SetCard.create(set.name, set.description, user.username);
 		setCard.delay = index * 100;
+		a.href = `/sets/edit?id=${set.id}`;
+		a.append(setCard);
 		if (set.user_id === APIClient.userId) {
-			this.#userSets.append(setCard);
+			this.#userSets.append(a);
 		}
 		else {
-			this.#sets.append(setCard);
+			this.#sets.append(a);
 		}
 	}
 

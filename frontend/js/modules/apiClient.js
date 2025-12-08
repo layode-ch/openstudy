@@ -1,6 +1,6 @@
 export default class APIClient {
 	
-	static API_BASE = "api";
+	static API_BASE = `${window.origin}/api`;
 
 	static get token() { return localStorage.getItem("token"); }
 	static set token(value) { localStorage.setItem("token", value); }
@@ -73,6 +73,14 @@ export default class APIClient {
 
 	static async searchSets() {
 		return await this.request("GET", "/set/search");
+	}
+
+	static async getUserById(id) {
+		return await this.request("GET", `/user/${id}`);
+	}
+
+	static async getSetById(id) {
+		return await this.request("GET", `/set/${id}`);
 	}
 
 }
