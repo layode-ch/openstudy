@@ -5,6 +5,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use OpenApi\Attributes as OA;
 use OpenStudy\HTTPStatus;
+use OpenStudy\Models\Set;
 use OpenStudy\Models\User;
 use OpenStudy\Schemas\Login;
 use OpenStudy\Schemas\Message;
@@ -83,8 +84,32 @@ class UserController extends BaseController {
 		return static::updateResponse($response, ["token" => $user->token], HTTPStatus::CREATED);
 	}
 
+	#[
+		OA\Get("/user/auth", tags:["User"]),
+		OA\Response(response: 200, content: new OA\MediaType(
+			mediaType: "application/json",
+			schema: new OA\Schema(User::class)
+		))
+	]
 	public static function auth(Request $request, Response $response, array $args): Response {
-		$message = new Message("The token is valid");
-		return static::updateResponse($response, $message);
+		$userId = $request->getAttribute("user_id");
+		return static::updateResponse($response, User::selectById($userId));
+	}
+
+	#[
+		OA\Get("/user/sets", tags:["User"]),
+		OA\Response(response: 200, content: new OA\MediaType(
+			mediaType: "application/json",
+			schema: new OA\Schema(
+				properties: [
+					new OA\Property("sets", type:"array", items: new OA\Items(Set::class))
+				]
+			)
+		))
+	]
+	public static function terms(Request $request, Response $response, array $args): Response {
+		$userId = (int)$request->getAttribute("user_id");
+		$sets = Set::selectAllByUserId($userId);
+		return static::updateResponse($response, ["sets" => $sets]);
 	}
 }
