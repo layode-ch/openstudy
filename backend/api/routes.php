@@ -18,5 +18,6 @@ $app->group("/set" , function (RouteCollectorProxy $group) {
 	$group->put("/create", [SetController::class, "create"])->add(new AuthMiddleware());
 	$group->put("/{id}/add", [SetController::class, "add"])->add(new AuthMiddleware());
 	$group->get("/search", [SetController::class, "search"])->add(new AuthMiddleware());
+	$group->post("/{id}", [SetController::class, "update"])->add(new AuthMiddleware());
 	$group->get("/{id}", [SetController::class, "getById"]);
 });
