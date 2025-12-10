@@ -8,7 +8,7 @@ use OpenStudy\Models\Set;
 use OpenStudy\Models\Term;
 use OpenStudy\Models\User;
 use OpenStudy\Schemas\AddTerms;
-use OpenStudy\Schemas\CreateSet;
+use OpenStudy\Schemas\DefineSet;
 use OpenStudy\Schemas\Message;
 use OpenStudy\Schemas\SchemaException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -17,13 +17,16 @@ use Slim\Psr7\Request;
 #[OA\Tag("Set")]
 class SetController extends BaseController {
 
+	/**
+	 * Allows to create a set
+	 */
 	#[
 		OA\Put("/set/create", tags: ["Set"]),
 		OA\RequestBody( 
 		required: true,
 		content: new OA\MediaType(
 			"application/json",
-			new OA\Schema(CreateSet::class)
+			new OA\Schema(DefineSet::class)
 		)),
 		OA\Response(response: 200,
 			content: new OA\MediaType(
@@ -33,7 +36,7 @@ class SetController extends BaseController {
 		)
 	]
 	public static function create(Request $request, Response $response, array $args): Response {
-		$schema = new CreateSet(static::getBody($request));
+		$schema = new DefineSet(static::getBody($request));
 		$userId = $request->getAttribute("user_id");
 		$set = new Set($schema);
 		$set->userId = $userId;
@@ -42,6 +45,9 @@ class SetController extends BaseController {
 		return static::updateResponse($response, $set, HTTPStatus::CREATED);
 	}
 
+	/**
+	 * Allows to add terms in a set
+	 */
 	#[
 		OA\Put("/set/{id}/add", tags: ["Set"], 
 			parameters: [
@@ -75,7 +81,44 @@ class SetController extends BaseController {
 		}
 		return static::updateResponse($response, new Message("Terms added successfully"), HTTPStatus::CREATED);
 	}
+
+	/**
+	 * Allows to change the name and description of a set
+	 */
+	#[
+		OA\Post("/set/{id}", tags: ["Set"], 
+			parameters: [
+				new OA\Parameter(name:"id", in: "path", required: true)
+			]
+		),
+		OA\RequestBody(required: true, content: new OA\MediaType(
+			"application/json",
+			schema: new OA\Schema(DefineSet::class)
+		)),
+		OA\Response(response: HTTPStatus::CREATED->value, 
+			content: new OA\MediaType("application/json",
+				schema: new OA\Schema(Message::class)
+			) 
+		)
+	]
+	public static function update(Request $request, Response $response, array $args): Response {
+		$userId = (int)$request->getAttribute("user_id");
+		$setId = (int)$args["id"];
+		$set = Set::selectById($setId);
+		if ($set === false)
+			static::notFound();
+		if ($set->userId !== $userId)
+			static::forbidden();
+		$schema = new DefineSet(static::getBody($request));
+		$set = new Set($schema);
+		$set->id = $setId;
+		$set->update();
+		return static::updateResponse($response, new Message("Set updated successfully"), HTTPStatus::CREATED);
+	}
 	
+	/**
+	 * Allows to search for sets
+	 */
 	#[
 		OA\Get("/set/search", tags: ["Set"]),
 		OA\Response(response:200, content: new OA\JsonContent(
@@ -88,6 +131,9 @@ class SetController extends BaseController {
 		return static::updateResponse($response, $sets);
 	}
 
+	/**
+	 * Allows to get a specific set by its id
+	 */
 	#[
 		OA\Get("/set/{id}", tags: ["Set"],
 			parameters: [

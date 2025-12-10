@@ -17,9 +17,6 @@ class UserController extends BaseController {
 
 	/**
 	 * Allows to login into a user account
-	 *
-	 * @param Login $schema
-	 * @return Response
 	 */
 	#[
 		OA\Post("/user/login", tags: ["User"]),
@@ -50,11 +47,6 @@ class UserController extends BaseController {
 
 	/**
 	 * Allows to create a user account
-	 *
-	 * @param Request $request
-	 * @param Response $response
-	 * @param array $args
-	 * @return Response
 	 */
 	#[
 		OA\Post("/user/sign-up", tags: ["User"]),
@@ -84,6 +76,9 @@ class UserController extends BaseController {
 		return static::updateResponse($response, ["token" => $user->token], HTTPStatus::CREATED);
 	}
 
+	/**
+	 * Allows to check if the token is valid and getting the user's infos
+	 */
 	#[
 		OA\Get("/user/auth", tags:["User"]),
 		OA\Response(response: 200, content: new OA\MediaType(
@@ -96,6 +91,9 @@ class UserController extends BaseController {
 		return static::updateResponse($response, User::selectById($userId));
 	}
 
+	/**
+	 * Allows to get all sets made by a user
+	 */
 	#[
 		OA\Get("/user/sets", tags:["User"]),
 		OA\Response(response: 200, content: new OA\MediaType(
@@ -113,6 +111,9 @@ class UserController extends BaseController {
 		return static::updateResponse($response, ["sets" => $sets]);
 	}
 
+	/**
+	 * Allows to get a user by their id
+	 */
 	#[
 		OA\Get("/user/{id}", tags: ["User"], 
 			parameters: [
