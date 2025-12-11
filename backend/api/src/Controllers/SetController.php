@@ -151,6 +151,26 @@ class SetController extends BaseController {
 		return static::updateResponse($response, $set);
 	}
 
+	/** Allows to get all terms from a set by its id */
+	#[
+		OA\Get("/set/{id}/terms", tags: ["Set"],
+			parameters: [
+				new OA\Parameter(name:"id", in: "path", required: true)
+			]),
+		OA\Response(response:200, content: new OA\JsonContent(
+			type: "array",
+			items: new OA\Items(Term::class)
+		))
+	]
+	public static function getTerms(Request $request, Response $response, array $args): Response {
+		$id = (int)$args["id"];
+		$set = Set::selectById($id);
+		if ($set === false)
+			static::notFound();
+		$terms = Term::selectAllBySetId($id);
+		return static::updateResponse($response, $terms);
+	}
+
 	private static function notFound() {
 		throw new SchemaException(["Set not found"], HTTPStatus::NOT_FOUND);
 	}
