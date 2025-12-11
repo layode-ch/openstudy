@@ -37,4 +37,13 @@ class Term extends BaseModel {
 		return static::selectBy("id", $id);
 	}
 
+	/**
+	 * Undocumented function
+	 *
+	 * @param integer $id
+	 * @return array<Term>
+	 */
+	public static function selectAllBySetId(int $id): array {
+		return static::search(exactMatchColumns:["set_id" => $id]);
+	}
 }
