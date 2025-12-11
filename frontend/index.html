@@ -10,7 +10,7 @@
 	<script type="importmap">
 	{
 		"imports": {
-			"animejs": "./node_modules/animejs/dist/bundles/anime.esm.js"
+			"animejs": "/node_modules/animejs/dist/bundles/anime.esm.js"
 		}
 	}
 	</script>
@@ -43,20 +43,20 @@
 						</p>
 					</div>
 					<div class="flex flex-wrap justify-center bg-primary/30">
-						<div is="card-component" title="Community" src="./img/community.png" fade class="bg-base-100 w-96 shadow-xl">
+						<div is="card-component" title="Community" src="./img/community.png" hover fade class="bg-base-100 w-96 shadow-xl">
 							This project is maintained by its community, making the sets for everyone to
 							work on and study. We want a place for everyone.
 						</div>
-						<div is="card-component" title="Create" src="./img/create.png" fade delay="100" class="bg-base-100 w-96 shadow-xl">
+						<div is="card-component" title="Create" src="./img/create.png" hover fade delay="100" class="bg-base-100 w-96 shadow-xl">
 							Create your own study sets with ease. Add terms, definitions, images, and more.
 						</div>
-						<div is="card-component" title="Share" src="./img/share.png" fade delay="150" class="bg-base-100 w-96 shadow-xl">
+						<div is="card-component" title="Share" src="./img/share.png" hover fade delay="150" class="bg-base-100 w-96 shadow-xl">
 							Share your learning materials with classmates or the entire Open Study community.
 						</div>
-						<div is="card-component" title="Study Modes" src="./img/study.jpg" fade delay="200" class="bg-base-100 w-96 shadow-xl">
+						<div is="card-component" title="Study Modes" src="./img/study.jpg" hover fade delay="200" class="bg-base-100 w-96 shadow-xl">
 							Choose from multiple study modes: flashcards, tests, matching, writing, and more.
 						</div>
-						<div is="card-component" title="Progress" src="./img/progress.png" fade delay="250" class="bg-base-100 w-96 shadow-xl">
+						<div is="card-component" title="Progress" src="./img/progress.png" hover fade delay="250" class="bg-base-100 w-96 shadow-xl">
 							Track your progress and improve your learning step by step with helpful stats.
 						</div>
 					</div>
@@ -140,7 +140,26 @@
 			</div>
 		</template>
 		<template id="sets-edit">
+		</template>
+		<template id="sets-flashcard">	
+			<div class="flex flex-col items-center text-center w-dvw justify-around bg-primary/30">
+				<h1 id="set-title" class="text-5xl m-5">Title</h1>
+				<div id="errors">
+				</div>
+				<hr class="h-1 w-full bg-primary rounded-full border-0"> 
+				<div id="controls" class="flex justify-between items-center mb-5">
+					<button id="prev" class="btn btn-primary"><</button>
+					<div id="card-carousel" is="carousel-component" class="w-120"></div>
+					<button id="next" class="btn btn-primary">></button>
+				</div>
+				
+				<hr class="h-1 w-full bg-primary rounded-full border-0"> 
 
+				<h1 id="set-title" class="text-3xl m-5">Terms</h1>
+				<ul>
+					<li>Hello</li>
+				</ul>
+			</div>
 		</template>
 	</main>
 	
