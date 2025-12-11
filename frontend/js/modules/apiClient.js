@@ -83,6 +83,11 @@ export default class APIClient {
 		return await this.request("GET", `/set/${id}`);
 	}
 
+	
+	static async getTermsBySetId(id) {
+		return await this.request("GET", `/set/${id}/terms`);
+	}
+
 }
 
 export class APIError {
