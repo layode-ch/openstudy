@@ -39,6 +39,7 @@ export class Alert extends HTMLDivElement {
     constructor() {
         super();
         this.classList.add("alert");
+        this.type = this.type;
         const text = this.textContent;
         this.innerHTML = `
 			<i class="bi bi-info-circle"></i>
