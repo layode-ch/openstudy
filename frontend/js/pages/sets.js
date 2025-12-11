@@ -41,7 +41,7 @@ export default class Sets extends Page {
 		}
 		const setCard = SetCard.create(set.name, set.description, user.username);
 		setCard.delay = index * 100;
-		a.href = `/sets/edit?id=${set.id}`;
+		a.href = `/sets/flashcard?id=${set.id}`;
 		a.append(setCard);
 		if (set.user_id === APIClient.userId) {
 			this.#userSets.append(a);

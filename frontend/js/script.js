@@ -3,6 +3,7 @@ import PageManager from "./modules/pageManager.js";
 import Login from "./pages/login.js";
 import Sets from "./pages/sets.js";
 import SetsEdit from "./pages/setsEdit.js";
+import SetsFlashcard from "./pages/setsFlashcard.js";
 import SignUp from "./pages/signup.js";
 
 class App {
@@ -13,7 +14,8 @@ class App {
 			["/login", new Login("#login")],
 			["/sign-up", new SignUp("#sign-up")],
 			["/sets", new Sets("#sets")],
-			["/sets/edit", new SetsEdit("#sets-edit")]
+			["/sets/edit", new SetsEdit("#sets-edit")],
+			["/sets/flashcard", new SetsFlashcard("#sets-flashcard")]
 		]);
 		const app = document.querySelector("#app");
 		this.pageManager = new PageManager(route, app, false, ["/", "/login", "/sign-up"]);

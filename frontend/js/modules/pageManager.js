@@ -5,6 +5,7 @@ import Page from "./page.js";
  * Classe pour gérer les pages SPA.
  */
 export default class PageManager {
+	#location;
 	/**
 	 * @constructor
 	 * @param {Map<string, Page>} route 
@@ -22,6 +23,7 @@ export default class PageManager {
 		})
 		this.publicPages = publicPages;
 		this.adminPages = adminPages;
+		this.#location = null;
 	}
 
 	/**
@@ -33,6 +35,8 @@ export default class PageManager {
 		let path = this.hash ? location.hash.replace("#", "/") : location.pathname;
 		if (path.trim() == "")
 			path = "/";
+		if (path === this.#location)
+			return;
 		if(!this.route.has(path)){
 			console.error("Page not found");
 			path = "/not-found";
@@ -44,6 +48,8 @@ export default class PageManager {
 		const page = this.route.get(path);
 		this.main.innerHTML = "";
 		this.main.append(page.template.content.cloneNode(true));
+		page.main = this.main;
+		this.#location = window.location.pathname;
 		page.init();
 	}
 
