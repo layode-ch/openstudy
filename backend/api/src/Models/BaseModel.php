@@ -70,7 +70,8 @@ abstract class BaseModel implements JsonSerializable {
 
 	protected static function search(array $likeColumns = [], array $exactMatchColumns = []): array {
 		$conditions = static::searchCondition($likeColumns, $exactMatchColumns);
-		$sttmt = self::run($conditions["sql"], $conditions["params"]);
+		$sql = static::selectQuery()." WHERE ".$conditions["sql"];
+		$sttmt = self::run($sql, $conditions["params"]);
 		return $sttmt->fetchAll(PDO::FETCH_CLASS, static::class);
 	}
 
