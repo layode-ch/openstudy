@@ -12,6 +12,15 @@ export class Card extends HTMLDivElement {
 		this.setAttribute("fade", value.toString());
 		this.#setAnimation();
 	}
+
+	get hover() { 
+        const value = this.getAttribute("hover");
+        return value !== null && value !== "false" 
+    }
+    set hover(value) { 
+		this.setAttribute("hover", value.toString());
+		this.#setAnimation();
+	}
 	
 	get delay() { return Number(this.getAttribute("delay")); }
 	set delay(value) { return this.setAttribute("delay", value); }
@@ -19,7 +28,7 @@ export class Card extends HTMLDivElement {
 	get src() { return this.getAttribute("src"); }
 	set src(value) {
 		this.#figure.classList.toggle("hidden", (value == null));
-		return this.setAttribute("src", value); 
+		this.setAttribute("src", value); 
 	}
 
 	
@@ -31,7 +40,8 @@ export class Card extends HTMLDivElement {
 	get title() { return this.getAttribute("title"); }
 	set title(value) { 
 		this.setAttribute("title", value);
-		this.querySelector(".card-title").textContent = value;
+		this.#title.classList.toggle("hidden", (value == null));
+		this.#title.textContent = value;
 	}
 
 	#figure;
@@ -61,16 +71,10 @@ export class Card extends HTMLDivElement {
 		`;
 		this.#body = this.querySelector(".card-body");
 		this.#figure = this.querySelector("figure");
+		this.#title = this.querySelector(".card-title");
 		this.#figure.classList.toggle("hidden", (this.src == null));
+		this.#title.classList.toggle("hidden", (this.title == null));
 		this.#setAnimation();
-		this.addEventListener("mouseover", () => {
-			waapi.animate(this, {
-				y: {
-					to: "-1rem"
-				},
-				ease: spring({ stiffness: 100 }),
-			});
-		});
 		this.addEventListener("mouseleave", () => {
 			waapi.animate(this, {
 				y: {
@@ -100,6 +104,16 @@ export class Card extends HTMLDivElement {
 			ease: spring({ stiffness: 100 }),
 			autoplay: false
 		});
+		if (this.hover == true) {
+			this.addEventListener("mouseover", () => {
+				waapi.animate(this, {
+					y: {
+						to: "-1rem"
+					},
+					ease: spring({ stiffness: 100 }),
+				});
+			});
+		} 
 	}
 
 	close() {

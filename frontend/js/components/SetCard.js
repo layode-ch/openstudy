@@ -25,6 +25,7 @@ export class SetCard extends Card {
 	constructor() {
 		super();
 		this.fade = true;
+		this.hover = true;
 		this.body.innerHTML += `
 			<hr class="h-1 w-full bg-base-300 rounded-full my-1 border-0"> 
 			<p class="set-description">${this.description}</p>
