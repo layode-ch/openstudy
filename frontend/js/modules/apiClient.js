@@ -88,6 +88,18 @@ export default class APIClient {
 		return await this.request("GET", `/set/${id}/terms`);
 	}
 
+	static async deleteTerm(id) {
+		return await this.request("DELETE", `/term/${id}`);
+	}
+
+	static async updateTerm(id, data) {
+		return await this.request("POST", `/term/${id}`, data);
+	}
+
+	static async addTerms(id, data) {
+		return await this.request("PUT", `/set/${id}/add`, data);
+	}
+
 }
 
 export class APIError {

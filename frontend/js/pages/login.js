@@ -1,4 +1,4 @@
-import { Alert, EditForm } from "../components/index.js";
+import { Alert, EditForm, Toast } from "../components/index.js";
 import APIClient, { APIError } from "../modules/apiClient.js";
 import Page from "../modules/page.js";
 import app from "../script.js";
@@ -27,6 +27,8 @@ export default class Login extends Page {
 		}
 		else {
 			APIClient.token = response.token;
+			const toast = Toast.create("You got successfully logged in", "success");
+			app.notifications.append(toast);
 			app.pageManager.changePage("/");
 		}
 	}

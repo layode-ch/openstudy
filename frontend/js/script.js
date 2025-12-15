@@ -21,6 +21,7 @@ class App {
 		this.pageManager = new PageManager(route, app, false, ["/", "/login", "/sign-up"]);
 		this.pageManager.handleLocation();
 		this.#setupLinkEvents();
+		this.notifications = document.querySelector("#notifications");
 	}
 
 	#setupLinkEvents() {

@@ -1,10 +1,11 @@
-import { Card, Carousel, Flashcard } from "../components/index.js";
+import { Card, Carousel, Flashcard, TermForm, Toast } from "../components/index.js";
 import  APIClient, { APIError } from "../modules/apiClient.js";
 import Page from "../modules/page.js";
 import app from "../script.js";
 export default class SetsFlashcard extends Page {
 	#set;
 	#user;
+	/** @type {any[]} */
 	#terms;
 	/** @type {Carousel} */
 	#carousel;
@@ -16,22 +17,61 @@ export default class SetsFlashcard extends Page {
 		const btnPrev = this.main.querySelector("#prev");
 		const btnNext = this.main.querySelector("#next");
 		const title = this.main.querySelector("#set-title");
-		btnNext.addEventListener("click", () => this.#carousel.next())
-		btnPrev.addEventListener("click", () => this.#carousel.previous())
+		const terms = this.main.querySelector("#terms")
+		btnNext.addEventListener("click", () => {
+			this.#carousel.next(); 
+			window.scrollTo(0, 0);
+		})
+		btnPrev.addEventListener("click", () => {
+			this.#carousel.previous(); 
+			window.scrollTo(0, 0);
+		})
 		if (result) {
 			title.textContent = this.#set.name;
-			this.#terms.forEach(term => {
-				const flashcard = Flashcard.create(term.original, term.definition);
-				flashcard.classList.add("m-auto")
-				this.#carousel.add(flashcard);
-			});
+			this.#createCardsAndSets(terms);
+			const form = TermForm.create(this.#set.id, "", "");
+			form.showCreate();
+			form.addEventListener("submit", () => {this.#termFormOnsubit(form, null)})
+			terms.append(form);
 		}
 	}
 
+	#createCardsAndSets(terms) {
+		this.#terms.forEach(term => {
+			let flashcard = Flashcard.create(term.original, term.definition);
+			flashcard.classList.add("m-auto")
+			this.#carousel.add(flashcard);
+			const form = TermForm.create(term.id, term.original, term.definition);
+			form.addEventListener("submit", e => {
+				this.#termFormOnsubit(form, flashcard);
+			});
+			terms.append(form);
+		});
+	}
+	#termFormOnsubit(form, flashcard) {
+		const data = new FormData(form);
+		switch(form.clickedAction) {
+			case "Update":
+				flashcard.original = data.get("original");
+				flashcard.definition = data.get("definition");
+				break
+			case "Create":
+				flashcard = Flashcard.create(data.get("original"), data.get("definition"));
+				form.showDefault();
+				this.#carousel.add(flashcard);
+				const newForm = TermForm.create(this.#set.id, "", "");
+				newForm.showCreate();
+				newForm.addEventListener("submit", e => {
+					this.#termFormOnsubit(newForm, null);
+				});
+				terms.append(newForm);
+				break;
+		}
+	}
 	async #fetchData(setId) {
 		this.#set = await APIClient.getSetById(setId);
 		if (this.#set instanceof APIError) {
-			this.displayErrors(set.errors);
+			this.displayErrors(this.#set.errors);
 			return false;
 		}
 		this.#user = await APIClient.getUserById(this.#set.user_id);

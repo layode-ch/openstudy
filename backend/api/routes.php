@@ -1,6 +1,7 @@
 <?php
 use OpenStudy\Controllers\OpenApiController;
 use OpenStudy\Controllers\SetController;
+use OpenStudy\Controllers\TermController;
 use OpenStudy\Controllers\UserController;
 use OpenStudy\Middlewares\AuthMiddleware;
 use Slim\Routing\RouteCollectorProxy;
@@ -21,4 +22,9 @@ $app->group("/set" , function (RouteCollectorProxy $group) {
 	$group->get("/search", [SetController::class, "search"])->add(new AuthMiddleware());
 	$group->post("/{id}", [SetController::class, "update"])->add(new AuthMiddleware());
 	$group->get("/{id}", [SetController::class, "getById"]);
+});
+
+$app->group("/term" , function (RouteCollectorProxy $group) {
+	$group->delete("/{id}", [TermController::class, "delete"]);
+	$group->post("/{id}", [TermController::class, "update"]);
 });

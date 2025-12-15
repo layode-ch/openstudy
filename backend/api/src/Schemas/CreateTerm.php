@@ -7,8 +7,8 @@ use OpenStudy\Attributes\Property;
 
 #[OA\Schema]
 class CreateTerm extends BaseSchema {
-	#[OA\Property, Property, VA\Filter(FILTER_SANITIZE_FULL_SPECIAL_CHARS)]
+	#[OA\Property, Property, VA\Min(2), VA\Filter(FILTER_SANITIZE_FULL_SPECIAL_CHARS)]
 	public string $original;
-	#[OA\Property, Property, VA\Filter(FILTER_SANITIZE_FULL_SPECIAL_CHARS)]
+	#[OA\Property, Property, VA\Min(2), VA\Filter(FILTER_SANITIZE_FULL_SPECIAL_CHARS)]
 	public string $definition;
 }

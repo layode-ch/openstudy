@@ -41,7 +41,7 @@ class UserController extends BaseController {
 		if ($user === false)
 			throw new SchemaException(["User not found"], HTTPStatus::NOT_FOUND);
 		if (!password_verify($schema->password, $user->password))
-			throw new SchemaException(["Wrong password", HTTPStatus::FORBIDDEN]);
+			throw new SchemaException(["Wrong password"], HTTPStatus::FORBIDDEN);
 		return static::updateResponse($response, ["token" => $user->token]);
 	}  
 

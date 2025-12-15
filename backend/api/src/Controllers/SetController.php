@@ -6,8 +6,8 @@ use OpenApi\Attributes as OA;
 use OpenStudy\HTTPStatus;
 use OpenStudy\Models\Set;
 use OpenStudy\Models\Term;
-use OpenStudy\Models\User;
 use OpenStudy\Schemas\AddTerms;
+use OpenStudy\Schemas\CreateTerm;
 use OpenStudy\Schemas\DefineSet;
 use OpenStudy\Schemas\Message;
 use OpenStudy\Schemas\SchemaException;
@@ -77,7 +77,7 @@ class SetController extends BaseController {
 		$schema = new AddTerms(static::getBody($request));
 		foreach ($schema->terms as $term) {
 			$term->setId = $setId;
-			$term->insert();
+				$term->insert();
 		}
 		return static::updateResponse($response, new Message("Terms added successfully"), HTTPStatus::CREATED);
 	}
@@ -170,6 +170,8 @@ class SetController extends BaseController {
 		$terms = Term::selectAllBySetId($id);
 		return static::updateResponse($response, $terms);
 	}
+
+	
 
 	private static function notFound() {
 		throw new SchemaException(["Set not found"], HTTPStatus::NOT_FOUND);

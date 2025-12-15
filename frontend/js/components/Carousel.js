@@ -44,6 +44,14 @@ export class Carousel extends HTMLDivElement {
 		})
 	}
 
+
+	removeChild(child) {
+		this.#slides.remove(child);
+		return super.removeChild(child);
+	}
+
+	
+
 	next() {
 		if (this.#slides.length === 0) return;
 
@@ -100,6 +108,14 @@ class SlidesManager extends Array {
 		});
 
 		return this.length;
+	}
+
+	remove(...items) {
+		for(const item of items) {
+			const index = this.indexOf(item);
+			if (index >= 0) 
+				this.splice(index, 1);
+		}
 	}
 }
 

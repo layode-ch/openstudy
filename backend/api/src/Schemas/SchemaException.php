@@ -9,7 +9,13 @@ class SchemaException extends Exception implements JsonSerializable {
 
 	public HTTPStatus $httpStatus {
 		get {
-			$this->getHttpStatus();
+			return $this->getHttpStatus();
+		}
+	}
+
+	public array $errors {
+		get {
+			return json_decode($this->getMessage(), true);
 		}
 	}
 

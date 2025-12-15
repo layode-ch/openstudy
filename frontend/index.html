@@ -30,8 +30,10 @@
 				<li class="m-4 link-hover"><a href="/login">Account</a></li>
 			</ul>
 		</nav>
+		<div id="notifications" class="flex flex-col items-end h-0">
+		</div>
 	</header>
-	<main class="m-auto">
+	<main class="m-auto relative">
 		<div id="app"></div>
 		<template id="home">
 			<div class="flex flex-col items-center text-center w-dvw justify-around">
@@ -152,13 +154,10 @@
 					<div id="card-carousel" is="carousel-component" class="w-120"></div>
 					<button id="next" class="btn btn-primary">></button>
 				</div>
-				
 				<hr class="h-1 w-full bg-primary rounded-full border-0"> 
-
-				<h1 id="set-title" class="text-3xl m-5">Terms</h1>
-				<ul>
-					<li>Hello</li>
-				</ul>
+				<h1 class="text-3xl m-5">Terms</h1>
+				<div id="terms">
+				</div>
 			</div>
 		</template>
 	</main>

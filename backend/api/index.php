@@ -21,10 +21,7 @@ $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
 $errorMiddleware->setDefaultErrorHandler(function (Request $request, Throwable $exception) {
     if ($exception instanceof SchemaException) {
-        sendErrors(
-            json_decode($exception->getMessage(), true),
-            $exception->getHttpStatus()
-        );
+        sendErrors($exception->errors, $exception->httpStatus);
     }
     sendErrors([$exception->getFile() => [
 		$exception->getLine(),

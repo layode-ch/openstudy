@@ -5,3 +5,5 @@ export { EditForm } from "./EditForm.js";
 export { SetCard } from "./SetCard.js";
 export { Flashcard } from "./Flashcard.js"
 export { Carousel } from "./Carousel.js"
+export { TermForm } from "./TermForm.js";
+export { Toast } from "./Toast.js";

@@ -66,4 +66,17 @@ export default class PageManager {
 			window.history.pushState({}, "", path);
 		this.handleLocation();
 	}
+
+	reload() {
+		let path = this.hash ? location.hash.replace("#", "/") : location.pathname;
+		if (path.trim() == "")
+			path = "/";
+		
+		const page = this.route.get(path);
+		this.main.innerHTML = "";
+		this.main.append(page.template.content.cloneNode(true));
+		page.main = this.main;
+		this.#location = window.location.pathname;
+		page.init();
+	}
 }

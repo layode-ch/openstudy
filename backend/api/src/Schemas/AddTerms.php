@@ -13,14 +13,14 @@ class AddTerms extends BaseSchema {
 	#[
 		OA\Property("terms", type: "array", 
 			items: new OA\Items(CreateTerm::class)
-		), Property
+		), Property("terms")
 	]
 	private array $_terms;
 
 	public function __construct(array $data) {
 		parent::__construct($data);
 		foreach ($this->_terms as $key => $term) {
-			$this->terms[$key] = new CreateTerm($term);
+			$this->terms[$key] = new Term(new CreateTerm($term));
 		}
 	}
 }

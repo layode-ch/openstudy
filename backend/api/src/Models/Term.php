@@ -33,6 +33,15 @@ class Term extends BaseModel {
 		return self::getDB()->lastInsertId();
 	}
 
+	public function update() {
+		$sql = static::updateQuery();
+		static::run($sql, [
+			$this->original,
+			$this->definition,
+			$this->id,
+		]);
+	}
+
 	public static function selectById(int $id): Term {
 		return static::selectBy("id", $id);
 	}

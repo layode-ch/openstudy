@@ -23,12 +23,9 @@ export class Alert extends HTMLDivElement {
     set fade (value) { this.setAttribute("fade", value.toString()); }
     
     /**
-     * Description placeholder
-     *
      * @type {"infos"|"warning"|"success"|"error"|"primary"|"secondary"|null}
      */
     get type() {
-        // @ts-ignore
         return this.getAttribute("type");
     }
     set type(value) {
@@ -48,8 +45,8 @@ export class Alert extends HTMLDivElement {
                 <i class="bi bi-x-lg"></i>
             </button>
 		`;
-        this.closeBtn = this.querySelector("button.alert-close");
-        this.closeBtn.addEventListener("click", this.close.bind(this))
+        this.btnClose = this.querySelector("button.alert-close");
+        this.btnClose.addEventListener("click", this.close.bind(this))
         this.animation;
     }
 
