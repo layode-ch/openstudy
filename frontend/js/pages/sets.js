@@ -1,6 +1,7 @@
-import { Alert, SetCard } from "../components/index.js";
+import { Alert, SetCard, Toast } from "../components/index.js";
 import APIClient, { APIError } from "../modules/apiClient.js";
 import Page from "../modules/page.js";
+import app from "../script.js";
 
 export default class Sets extends Page {
 	/** @type {HTMLDivElement} */
@@ -17,6 +18,28 @@ export default class Sets extends Page {
 			await this.#displaySet(sets[i], i);
 		}
 		this.#checkSets();
+		this.#createSet();
+	}
+
+	#createSet() {
+		const btnCreateSet = this.main.querySelector("#btnCreateSet");
+		const dialog = this.main.querySelector("dialog");
+		const form = dialog.querySelectorAll("form")[1];
+		form.addEventListener("submit", async e => {
+			const result = await APIClient.createSet(form);
+			if (result instanceof APIError) {
+				result.errors.forEach(e => {
+					const toast = Toast.create(e, "error", 3000);
+					app.notifications.append(toast);
+				});
+			}
+			else {
+				const toast = Toast.create("Set created successfuly", "success");
+				app.notifications.append(toast);
+				await this.#displaySet(result, 0);
+			}
+		});
+		btnCreateSet.addEventListener("click", () => dialog.showModal());
 	}
 
 	

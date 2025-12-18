@@ -1,0 +1,261 @@
+@startuml class-diagram
+  enum "HTTPStatus" as HTTPStatus {
+  }
+  package Attributes as Attributes {
+    class "Property" as Attributes_Property {
+      +name : ?string
+      +__construct(name)
+    }
+    package DB as Attributes.DB {
+      class "Block" as Attributes_DB_Block {
+        +actions : array
+        +__construct(actions)
+      }
+      class "Column" as Attributes_DB_Column {
+      }
+      class "Sensitive" as Attributes_DB_Sensitive {
+      }
+      class "Table" as Attributes_DB_Table {
+        +name : string
+        +__construct(name)
+      }
+    }
+    package Validators as Attributes.Validators {
+      class "Max" as Attributes_Validators_Max {
+        -value : int
+        +__construct(value)
+        +validate(name, value)
+      }
+      class "Min" as Attributes_Validators_Min {
+        -value : int
+        +__construct(value)
+        +validate(name, value)
+      }
+      class "Validator" as Attributes_Validators_Validator {
+        {abstract} +validate(name, value)
+      }
+      class "ValidatorException" as Attributes_Validators_ValidatorException {
+      }
+      class "Filter" as Attributes_Validators_Filter {
+        +filter : int
+        +__construct(filter)
+        +validate(name, value)
+      }
+    }
+  }
+  package Controllers as Controllers {
+    class "BaseController" as Controllers_BaseController {
+      {static} #updateResponse(response, data, status)
+      {static} #getBody(request)
+    }
+    class "OpenApiController" as Controllers_OpenApiController {
+      {static} +swagger(request, response)
+    }
+    class "UserController" as Controllers_UserController {
+      {static} +login(request, response, args)
+      {static} +signUp(request, response, args)
+      {static} +auth(request, response, args)
+      {static} +terms(request, response, args)
+      {static} +getById(request, response, args)
+    }
+    class "SetController" as Controllers_SetController {
+      {static} +create(request, response, args)
+      {static} +add(request, response, args)
+      {static} +update(request, response, args)
+      {static} +search(request, response, args)
+      {static} +getById(request, response, args)
+      {static} +getTerms(request, response, args)
+      {static} -notFound()
+      {static} -forbidden()
+    }
+    class "TermController" as Controllers_TermController {
+      {static} +delete(request, response, args)
+      {static} +update(request, response, args)
+    }
+  }
+  package Models as Models {
+    class "BaseModel" as Models_BaseModel {
+      -pdo : ?PDO
+      {static} #getTable()
+      {static} #sensitiveColumns()
+      {static} #getDB()
+      {static} #run(sql, params)
+      {static} #selectAll()
+      {static} #search(likeColumns, exactMatchColumns)
+      {static} #selectBy(propriety, value)
+      {static} +delete(id)
+      {static} #searchCondition(likeColumns, exactMatchColumns)
+      {static} #getColumns()
+      {static} -anyColumns(block)
+      {static} -getPropertiesWithAttribute(attribute)
+      {static} #selectColumns()
+      {static} #updateColumns()
+      {static} #insertColumns()
+      {static} #selectQuery()
+      {static} #updateQuery()
+      {static} #deleteQuery()
+      {static} #insertQuery()
+      {static} #getProperties()
+      #toArray()
+      #toSafeArray()
+      +__set(name, value)
+      +jsonSerialize()
+    }
+    class "User" as Models_User {
+      +id : int
+      +email : string
+      +username : string
+      +password : string
+      +token : string
+      +__construct(data)
+      {static} +generateToken()
+      {static} +selectById(id)
+      {static} +selectByEmail(email)
+      {static} +selectByToken(token)
+      +insert()
+    }
+    class "Set" as Models_Set {
+      +id : int
+      +name : string
+      +description : string
+      +userId : int
+      +__construct(data)
+      +insert()
+      +update()
+      {static} +selectById(id)
+      {static} +selectAllByUserId(id)
+      {static} +searchAll()
+    }
+    class "Term" as Models_Term {
+      +id : int
+      +original : string
+      +definition : string
+      +setId : int
+      +__construct(data)
+      +insert()
+      +update()
+      {static} +selectById(id)
+      {static} +selectAllBySetId(id)
+    }
+  }
+  package Schemas as Schemas {
+    class "BaseSchema" as Schemas_BaseSchema {
+      -errors : array
+      -propErrors : array
+      +__construct(data)
+      -set(name, value)
+      -validateProprety(name, property, value)
+      -validateAllRequiredPropreties()
+      -verifyTypes(name, property, value)
+      -verifyEnum(types, name, property, value)
+      -getEnumValues(enumClass)
+      -getAttributesFromProprety(property, attribute)
+      -fieldTypeMessage(name, types)
+      -fieldValueMessage(name, values)
+      -getPropertiesWithAttribute(attribute)
+      -getPropertyNames()
+      -normalizeGetType(t)
+    }
+    class "SchemaException" as Schemas_SchemaException {
+      +httpStatus : HTTPStatus {get}
+      +errors : array {get}
+      +__construct(errors, httpStatus)
+      +getHttpStatus()
+      +jsonSerialize()
+    }
+    class "Login" as Schemas_Login {
+      +email : string
+      +password : string
+    }
+    class "SignUp" as Schemas_SignUp {
+      +email : string
+      +username : string
+      +password : string
+    }
+    class "CreateTerm" as Schemas_CreateTerm {
+      +original : string
+      +definition : string
+    }
+    class "AddTerms" as Schemas_AddTerms {
+      +terms : array<Term>
+      -_terms : array
+      +__construct(data)
+    }
+    class "Message" as Schemas_Message {
+      +message : string
+      +__construct(message)
+    }
+    class "DefineSet" as Schemas_DefineSet {
+      +name : string
+      +description : string
+    }
+  }
+  package Middlewares as Middlewares {
+    class "AuthMiddleware" as Middlewares_AuthMiddleware {
+      +process(request, handler)
+      {static} #verfifyToken()
+      {static} #getToken()
+    }
+  }
+  Attributes_DB_Block ..> Attributes_DB_Block
+  Attributes_Property <|-- Attributes_DB_Column
+  Attributes_Validators_Filter ..> Attributes_Validators_ValidatorException
+  Attributes_Validators_Max ..> Attributes_Validators_ValidatorException
+  Attributes_Validators_Min ..> Attributes_Validators_ValidatorException
+  Attributes_Validators_Validator <|-- Attributes_Validators_Filter
+  Attributes_Validators_Validator <|-- Attributes_Validators_Max
+  Attributes_Validators_Validator <|-- Attributes_Validators_Min
+  Controllers_BaseController ..> HTTPStatus
+  Controllers_BaseController <|-- Controllers_OpenApiController
+  Controllers_BaseController <|-- Controllers_SetController
+  Controllers_BaseController <|-- Controllers_TermController
+  Controllers_BaseController <|-- Controllers_UserController
+  Controllers_SetController ..> HTTPStatus
+  Controllers_SetController ..> Models_Set
+  Controllers_SetController ..> Models_Term
+  Controllers_SetController ..> Schemas_AddTerms
+  Controllers_SetController ..> Schemas_DefineSet
+  Controllers_SetController ..> Schemas_Message
+  Controllers_SetController ..> Schemas_SchemaException
+  Controllers_TermController ..> Models_Term
+  Controllers_TermController ..> Schemas_CreateTerm
+  Controllers_TermController ..> Schemas_Message
+  Controllers_UserController ..> HTTPStatus
+  Controllers_UserController ..> Models_Set
+  Controllers_UserController ..> Models_User
+  Controllers_UserController ..> Schemas_Login
+  Controllers_UserController ..> Schemas_SchemaException
+  Controllers_UserController ..> Schemas_SignUp
+  Middlewares_AuthMiddleware ..> HTTPStatus
+  Middlewares_AuthMiddleware ..> Models_User
+  Middlewares_AuthMiddleware ..> Schemas_SchemaException
+  Models_BaseModel ..> Attributes_DB_Block
+  Models_BaseModel ..> Attributes_DB_Column
+  Models_BaseModel ..> Attributes_DB_Sensitive
+  Models_BaseModel ..> Attributes_DB_Table
+  Models_BaseModel ..> Models_BaseModel
+  Models_BaseModel <|-- Models_Set
+  Models_BaseModel <|-- Models_Term
+  Models_BaseModel <|-- Models_User
+  Models_Set "1" ..> "*" Models_Set
+  Models_Set ..> Models_Set
+  Models_Set ..> Schemas_DefineSet
+  Models_Term "1" ..> "*" Models_Term
+  Models_Term ..> Models_Term
+  Models_Term ..> Schemas_CreateTerm
+  Models_User ..> Models_User
+  Models_User ..> Schemas_SignUp
+  Schemas_AddTerms ..> Models_Term
+  Schemas_AddTerms ..> Schemas_CreateTerm
+  Schemas_BaseSchema ..> Attributes_Property
+  Schemas_BaseSchema ..> Attributes_Validators_Filter
+  Schemas_BaseSchema ..> Attributes_Validators_Validator
+  Schemas_BaseSchema ..> Schemas_SchemaException
+  Schemas_BaseSchema <|-- Schemas_AddTerms
+  Schemas_BaseSchema <|-- Schemas_CreateTerm
+  Schemas_BaseSchema <|-- Schemas_DefineSet
+  Schemas_BaseSchema <|-- Schemas_Login
+  Schemas_BaseSchema <|-- Schemas_Message
+  Schemas_BaseSchema <|-- Schemas_SignUp
+  Schemas_SchemaException ..> HTTPStatus
+@enduml

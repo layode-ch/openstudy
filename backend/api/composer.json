@@ -17,5 +17,8 @@
         "zircote/swagger-php": "^5.7",
         "slim/slim": "4.*",
         "slim/psr7": "^1.8"
+    },
+    "require-dev": {
+        "smeghead/php-class-diagram": "^1.6"
     }
 }

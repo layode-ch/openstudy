@@ -81,13 +81,29 @@ export class TermForm extends EditForm {
 	}
 
 	showCreate() {
+		this.#showAction();
 		this.querySelectorAll(".default").forEach(e => e.classList.toggle("hidden", true));
 		this.querySelectorAll(".create").forEach(e => e.classList.toggle("hidden", false));
 	}
 
 	showDefault() {
+		this.#showAction();
 		this.querySelectorAll(".default").forEach(e => e.classList.toggle("hidden", false));
 		this.querySelectorAll(".create").forEach(e => e.classList.toggle("hidden", true));
+	}
+
+	hideActions() {
+		this.querySelectorAll("input").forEach(e => {
+			e.disabled = true;
+		});
+		this.querySelector(".actions").classList.toggle("hidden", true);
+	}
+
+	#showAction() {
+		this.querySelectorAll("input").forEach(e => {
+			e.disabled = false;
+		});
+		this.querySelector(".actions").classList.toggle("hidden", false);
 	}
 	
 	/**

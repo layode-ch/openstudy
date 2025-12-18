@@ -29,10 +29,12 @@ export default class SetsFlashcard extends Page {
 		if (result) {
 			title.textContent = this.#set.name;
 			this.#createCardsAndSets(terms);
-			const form = TermForm.create(this.#set.id, "", "");
-			form.showCreate();
-			form.addEventListener("submit", () => {this.#termFormOnsubit(form, null)})
-			terms.append(form);
+			if (this.#set.user_id === APIClient.userId) {
+				const form = TermForm.create(this.#set.id, "", "");
+				form.addEventListener("submit", () => {this.#termFormOnsubit(form, null)})
+				terms.append(form);
+				form.showCreate();
+			}
 		}
 	}
 
@@ -46,6 +48,8 @@ export default class SetsFlashcard extends Page {
 				this.#termFormOnsubit(form, flashcard);
 			});
 			terms.append(form);
+			if (APIClient.userId !== this.#set.user_id)
+				form.hideActions();
 		});
 	}
 	#termFormOnsubit(form, flashcard) {

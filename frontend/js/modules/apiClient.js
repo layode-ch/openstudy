@@ -100,6 +100,10 @@ export default class APIClient {
 		return await this.request("PUT", `/set/${id}/add`, data);
 	}
 
+	static async createSet(data) {
+		return await this.request("PUT", "/set/create", data);
+	}
+
 }
 
 export class APIError {

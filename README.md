@@ -67,3 +67,13 @@ Represents an account of a student
 - A user can delete their own sets
 
 - A user can study any set (flashcards / multi choice answers)
+
+## Instalation
+
+```bash
+docker compose up -d
+```
+
+The website in launched at [localhost](http://localhost)
+
+

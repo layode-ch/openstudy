@@ -135,11 +135,31 @@
 		<template id="sets">
 			<div class="min-h-100 flex flex-col items-center text-center w-dvw justify-evenly bg-primary/30 p-5">
 				<h1 class="text-3xl font-bold">Your sets</h1>
+				<button class="btn btn-primary" id="btnCreateSet">Create set</button>
 				<hr class="h-1 w-full bg-primary rounded-full border-0"> 
-				<div class="user-sets flex flex-wrap w-full"></div>
+				<div class="user-sets flex flex-wrap w-full">
+				</div>
 				<hr class="h-1 w-full bg-primary rounded-full border-0"> 
 				<div class="sets flex flex-wrap w-full"></div>
 			</div>
+
+			<dialog class="modal">
+				<div class="modal-box">
+					<form method="dialog">
+						<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+					</form>
+					<form method="dialog" is="edit-form-component" class="m-auto max-w-sm shrink-0 shadow-2xl">
+						<fieldset class="fieldset w-full">
+							<label class="label">Name</label>
+							<input class="input w-full" name="name" type="text" placeholder="Name..."/>
+							<label class="label">Description</label>
+							<input class="input w-full" name="description" type="text" placeholder="Description..."/>
+							<div id="errors"></div>
+							<input type="submit" class="btn btn-success mt-4" value="Create">
+						</fieldset>
+					</form>
+				</div>
+			</dialog>
 		</template>
 		<template id="sets-edit">
 		</template>
@@ -161,7 +181,6 @@
 			</div>
 		</template>
 	</main>
-	
 	<footer class="footer sm:footer-horizontal bg-neutral text-neutral-content p-10">
 		<nav>
 			<h6 class="footer-title">Author</h6>

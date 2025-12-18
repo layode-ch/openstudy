@@ -13,6 +13,7 @@ use Slim\Psr7\Request;
 
 #[OA\Tag("Term")]
 class TermController extends BaseController {
+	/** Allows to delete a term by its id */
 	#[
 		OA\Delete("/term/{id}", tags: ["Term"],
 			parameters: [
@@ -28,6 +29,7 @@ class TermController extends BaseController {
 		return static::updateResponse($response, new Message("Term deleted"));
 	}
 
+	/** Allows to update a term by its id */
 	#[
 		OA\Post("/term/{id}", tags: ["Term"],
 			parameters: [
