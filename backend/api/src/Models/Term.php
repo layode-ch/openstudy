@@ -47,8 +47,6 @@ class Term extends BaseModel {
 	}
 
 	/**
-	 * Undocumented function
-	 *
 	 * @param integer $id
 	 * @return array<Term>
 	 */

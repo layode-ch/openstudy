@@ -5,8 +5,6 @@
         - ./.env
       networks:
         - openstudy-network
-      ports:
-        - "3306:3306"
       volumes:
         - "./backend/sql:/docker-entrypoint-initdb.d"
         - db-data:/var/lib/mysql
